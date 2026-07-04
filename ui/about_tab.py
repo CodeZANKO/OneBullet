@@ -58,7 +58,7 @@ class AboutTab(QWidget):
             details_layout.addLayout(row)
             
         add_detail_row("Developer Team:", "One Bullet Development Team")
-        add_detail_row("Developer:", "Zanko Legend")
+        add_detail_row("Developer:", "Zanko Legend | zankodev.xyz")
         add_detail_row("Framework Platform:", "PyQt6 / Python 3.x")
         add_detail_row("Theme Aesthetics:", "Midnight Dark Palette with Neon Accents")
         add_detail_row("Automation Core:", "Selenium WebDriver API")
