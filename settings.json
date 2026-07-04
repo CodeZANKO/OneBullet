@@ -1,0 +1,140 @@
+{
+    "RuriLib": {
+        "General": {
+            "waitTime": 0,
+            "requestsTimeout": 10,
+            "maxHits": 0,
+            "runnerBotsDisplayMode": "Everything",
+            "enableBotLog": true,
+            "saveLastResponseSource": false,
+            "sendToCheckOnAbort": false,
+            "hitsWebhookEnabled": false,
+            "hitsWebhookUrl": "",
+            "hitsWebhookUsername": ""
+        },
+        "Proxies": {
+            "allowConcurrentUse": true,
+            "neverBanProxies": false,
+            "shuffleProxiesOnStart": true,
+            "banLoopEvasion": 10,
+            "dontReuseClearanceCookie": false,
+            "reloadProxiesWhenAllBanned": true,
+            "reloadInterval": 60,
+            "reloadSource": "Manager",
+            "globalBanKeys": "BAN\nBANNED\nACCESS DENIED\nUNAUTHORIZED",
+            "globalRetryKeys": "RETRY\nRETRY_KEY\nRATE LIMIT"
+        },
+        "Captchas": {
+            "captchaService": "TwoCaptcha",
+            "apiKey": "",
+            "bypassBalanceCheck": false,
+            "responseTimeout": 120
+        },
+        "Selenium": {
+            "browserType": "Chrome",
+            "headlessMode": false,
+            "drawMouseMovement": false,
+            "chromeBinaryLocation": "",
+            "firefoxBinaryLocation": "",
+            "defaultTimeout": 30,
+            "chromeExtensions": [],
+            "useGpuAcceleration": false
+        }
+    },
+    "OneBullet": {
+        "General": {
+            "automaticallySetRecommendedBots": true,
+            "backupDatabaseDaily": true,
+            "disableWarningOnQuit": false,
+            "alwaysOnTop": false,
+            "defaultAuthor": "One Bullet Development Team",
+            "startingWindowWidth": 1280,
+            "startingWindowHeight": 800,
+            "enableLogging": true,
+            "logToFile": false,
+            "logBufferSize": 100,
+            "ignoreWordlistName": false
+        },
+        "Sounds": {
+            "enableSoundOnHit": true,
+            "enableSoundOnCustom": false,
+            "enableSoundOnToCheck": false,
+            "soundFile": ""
+        },
+        "Sources": {
+            "sourcesList": []
+        },
+        "Themes": {
+            "colors": {
+                "backgroundMain": "#000000",
+                "backgroundSecondary": "#1e1e1e",
+                "foregroundMain": "#ffffff",
+                "foregroundGood": "#81c784",
+                "foregroundBad": "#e57373",
+                "foregroundCustom": "#64b5f6",
+                "foregroundRetry": "#ffd54f",
+                "foregroundToCheck": "#ffd54f",
+                "foregroundMenuSel": "#2196f3"
+            },
+            "images": {
+                "useImages": false,
+                "opacity": 100,
+                "backgroundImage": "",
+                "logo": ""
+            },
+            "additional": {
+                "allowTransparency": false,
+                "enableSnow": false,
+                "snowAmount": 50
+            }
+        }
+    },
+    "ZanBullet": {
+        "General": {
+            "automaticallySetRecommendedBots": true,
+            "backupDatabaseDaily": true,
+            "disableWarningOnQuit": false,
+            "alwaysOnTop": false,
+            "defaultAuthor": "One Bullet Development Team",
+            "startingWindowWidth": 1280,
+            "startingWindowHeight": 800,
+            "enableLogging": true,
+            "logToFile": false,
+            "logBufferSize": 100,
+            "ignoreWordlistName": false
+        },
+        "Sounds": {
+            "enableSoundOnHit": true,
+            "enableSoundOnCustom": false,
+            "enableSoundOnToCheck": false,
+            "soundFile": ""
+        },
+        "Sources": {
+            "sourcesList": []
+        },
+        "Themes": {
+            "colors": {
+                "backgroundMain": "#000000",
+                "backgroundSecondary": "#1e1e1e",
+                "foregroundMain": "#ffffff",
+                "foregroundGood": "#81c784",
+                "foregroundBad": "#e57373",
+                "foregroundCustom": "#64b5f6",
+                "foregroundRetry": "#ffd54f",
+                "foregroundToCheck": "#ffd54f",
+                "foregroundMenuSel": "#2196f3"
+            },
+            "images": {
+                "useImages": false,
+                "opacity": 100,
+                "backgroundImage": "",
+                "logo": ""
+            },
+            "additional": {
+                "allowTransparency": false,
+                "enableSnow": false,
+                "snowAmount": 50
+            }
+        }
+    }
+}
