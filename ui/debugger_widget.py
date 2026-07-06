@@ -122,7 +122,7 @@ class DebuggerWidget(QWidget):
         
         top_row.addWidget(QLabel("Data:"))
         self.cb_data_type = QComboBox()
-        self.cb_data_type.addItems(["Credentials", "Numeric", "Default"])
+        self.cb_data_type.addItems(["Default", "Credentials", "Card", "Numeric", "URLs", "Extended", "Custom"])
         top_row.addWidget(self.cb_data_type)
         
         layout.addLayout(top_row)
@@ -145,12 +145,26 @@ class DebuggerWidget(QWidget):
         self.tabs = QTabWidget()
         
         # Data Tab
+        data_tab_widget = QWidget()
+        data_tab_layout = QVBoxLayout(data_tab_widget)
+        data_tab_layout.setContentsMargins(4, 4, 4, 4)
+        data_tab_layout.setSpacing(6)
+        
+        test_data_layout = QHBoxLayout()
+        test_data_layout.addWidget(QLabel("Test Line:"))
+        self.txt_test_data = QLineEdit()
+        self.txt_test_data.setPlaceholderText("e.g. zannko.hatam@gmail.com:Zanko1234")
+        test_data_layout.addWidget(self.txt_test_data)
+        data_tab_layout.addLayout(test_data_layout)
+        
         self.dbg_data_table = QTableWidget()
         self.dbg_data_table.setColumnCount(3)
         self.dbg_data_table.setHorizontalHeaderLabels(["Variable Name", "Value", "Type"])
         self.dbg_data_table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.dbg_data_table.setFont(QFont("Consolas", 8))
-        self.tabs.addTab(self.dbg_data_table, "Data")
+        data_tab_layout.addWidget(self.dbg_data_table)
+        
+        self.tabs.addTab(data_tab_widget, "Data")
         
         # Log Tab
         self.dbg_logs = QPlainTextEdit()
@@ -267,10 +281,33 @@ class DebuggerWidget(QWidget):
         
         working_proxies = [p for p in self.configs_tab.proxies_tab.proxies if p['status'] == "Working"]
         
+        # Get and parse test data line
+        test_line = self.txt_test_data.text().strip()
+        wl_type = self.cb_data_type.currentText()
+        wl_format = self.configs_tab.opt_data_custom_format.text().strip() if wl_type == "Custom" else None
+        
+        # Default fallbacks if empty
+        if not test_line:
+            if wl_type == "Custom":
+                test_line = "zannko.hatam@gmail.com:Zanko1234"
+            elif wl_type in ["Credentials", "Email", "Default"]:
+                test_line = "zannko.hatam@gmail.com:Zanko1234"
+            elif wl_type == "Card":
+                test_line = "4111222233334444:12/28:123"
+            elif wl_type == "Numeric":
+                test_line = "123456789"
+            elif wl_type == "URLs":
+                test_line = "https://example.com"
+            else:
+                test_line = "test"
+                
+        from utils.helpers import parse_wordlist_line
+        parsed_vars = parse_wordlist_line(test_line, wl_type, wl_format)
+        
         self.engine = SeleniumEngine(
             self.configs_tab.blocks, 
             settings, 
-            variables_input={"USER": "admin", "PASS": "secret"},
+            variables_input=parsed_vars,
             proxies=working_proxies
         )
         

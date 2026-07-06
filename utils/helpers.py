@@ -486,7 +486,7 @@ QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {{
 
 
 
-def parse_wordlist_line(line: str, wordlist_type: str) -> dict:
+def parse_wordlist_line(line: str, wordlist_type: str, wordlist_format: str = None) -> dict:
     """
     Parses a single line from a wordlist based on its Wordlist Type,
     returning a dictionary of variable mappings (without < > wrappers).
@@ -495,6 +495,46 @@ def parse_wordlist_line(line: str, wordlist_type: str) -> dict:
     variables = {"LINE": line}
     wtype = (wordlist_type or "Default").strip().lower()
     
+    # Custom format mapping
+    if wtype == "custom" and wordlist_format:
+        tokens = re.split(r'(<[^>]+>)', wordlist_format)
+        regex_parts = []
+        tag_names = []
+        for i, token in enumerate(tokens):
+            if token.startswith('<') and token.endswith('>'):
+                var_name = token[1:-1]
+                tag_names.append(var_name)
+                # Determine separator to match up to
+                next_token = tokens[i+1] if i + 1 < len(tokens) else ""
+                if next_token:
+                    sep = re.escape(next_token[0])
+                    regex_parts.append(f"([^{sep}]*)")
+                else:
+                    regex_parts.append(f"(.*)")
+            else:
+                regex_parts.append(re.escape(token))
+                
+        pattern_regex = "^" + "".join(regex_parts) + "$"
+        try:
+            match = re.match(pattern_regex, line)
+            if match:
+                for var_name, val in zip(tag_names, match.groups()):
+                    variables[var_name] = val
+        except Exception:
+            pass
+
+        # Maintain compatibility aliases
+        if "EMAIL" in variables and "USER" not in variables:
+            variables["USER"] = variables["EMAIL"]
+        if "USER" in variables and "EMAIL" not in variables:
+            variables["EMAIL"] = variables["USER"]
+        if "PASSWORD" in variables and "PASS" not in variables:
+            variables["PASS"] = variables["PASSWORD"]
+        if "PASS" in variables and "PASSWORD" not in variables:
+            variables["PASSWORD"] = variables["PASS"]
+            
+        return variables
+
     # Credentials / Email / Default: Expects "input:password" format.
     # Split by the last ':' or ';' character.
     # Assign left side to <USER> or <EMAIL> and right side to <PASSWORD>.

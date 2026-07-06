@@ -30,7 +30,7 @@ class RunnerEngine(QObject):
     finished_signal = pyqtSignal()
     checked_line_signal = pyqtSignal(dict)
     
-    def __init__(self, blocks, settings, wordlist_lines, proxies, bots_count, wordlist_type="Default"):
+    def __init__(self, blocks, settings, wordlist_lines, proxies, bots_count, wordlist_type="Default", wordlist_format=None):
         super().__init__()
         self.blocks = blocks
         self.settings = settings
@@ -38,6 +38,7 @@ class RunnerEngine(QObject):
         self.proxies = proxies
         self.bots_count = bots_count
         self.wordlist_type = wordlist_type
+        self.wordlist_format = wordlist_format
         
         # Load global settings from settings.json
         from utils.helpers import load_settings
@@ -113,7 +114,7 @@ class RunnerEngine(QObject):
                 
             # Parse line variables based on wordlist type
             from utils.helpers import parse_wordlist_line
-            variables = parse_wordlist_line(line, self.wordlist_type)
+            variables = parse_wordlist_line(line, self.wordlist_type, self.wordlist_format)
             
             # Create a thread-safe dictionary/map for each active bot thread
             ThreadVariables = {}

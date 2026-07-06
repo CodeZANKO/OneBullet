@@ -284,6 +284,8 @@ class ConfigsTab(QWidget):
         
         left_layout.addWidget(self.editor_stack)
         
+
+        
         # Bottom Dock: Fixed text button reading "</> SWITCH TO ONE SCRIPT"
         self.btn_toggle_view = QPushButton("</> SWITCH TO ONE SCRIPT")
         self.btn_toggle_view.clicked.connect(self.on_toggle_view)
@@ -537,14 +539,85 @@ class ConfigsTab(QWidget):
         data_widget = QWidget()
         data_layout = QVBoxLayout(data_widget)
         
+        # Wordlist Configuration Group Box
+        wl_config_group = QGroupBox("Wordlist Configuration")
+        wl_config_lay = QVBoxLayout()
+        wl_config_lay.setContentsMargins(10, 10, 10, 10)
+        wl_config_lay.setSpacing(8)
+        
         form_lay = QFormLayout()
         self.opt_data_wl_type = QComboBox()
-        self.opt_data_wl_type.addItems(["Default", "Credentials", "Card", "Numeric", "URLs", "Extended"])
+        self.opt_data_wl_type.addItems(["Default", "Credentials", "Card", "Numeric", "URLs", "Extended", "Custom"])
         form_lay.addRow(QLabel("Allowed Wordlist Types:"), self.opt_data_wl_type)
+        
+        # Custom format section in Data Tab
+        self.data_custom_format_widget = QWidget()
+        data_cf_layout = QVBoxLayout()
+        data_cf_layout.setContentsMargins(0, 0, 0, 0)
+        self.data_custom_format_widget.setLayout(data_cf_layout)
+        
+        self.opt_data_custom_format = QLineEdit()
+        self.opt_data_custom_format.setPlaceholderText("<NAME>:<EMAIL>:<PASSWORD>:<DD>/<MM>/<YYYY>")
+        data_cf_layout.addWidget(QLabel("Custom Format Pattern:"))
+        data_cf_layout.addWidget(self.opt_data_custom_format)
+        
+        # Presets in Data Tab
+        data_cf_presets = QHBoxLayout()
+        data_cf_presets.addWidget(QLabel("Presets:"))
+        
+        btn_df_ep = QPushButton("EMAIL:PASS")
+        btn_df_ep.clicked.connect(lambda: self.opt_data_custom_format.setText("<EMAIL>:<PASSWORD>"))
+        data_cf_presets.addWidget(btn_df_ep)
+        
+        btn_df_ph = QPushButton("PHONE")
+        btn_df_ph.clicked.connect(lambda: self.opt_data_custom_format.setText("<PHONE>"))
+        data_cf_presets.addWidget(btn_df_ph)
+        
+        btn_df_cc = QPushButton("CCNUM:MM/YY:CVV")
+        btn_df_cc.clicked.connect(lambda: self.opt_data_custom_format.setText("<CCNUM>:<MM>/<YY>:<CVV>"))
+        data_cf_presets.addWidget(btn_df_cc)
+        
+        btn_df_ur = QPushButton("URLs")
+        btn_df_ur.clicked.connect(lambda: self.opt_data_custom_format.setText("<URL>"))
+        data_cf_presets.addWidget(btn_df_ur)
+        
+        button_style = """
+            QPushButton {
+                background-color: #232f44;
+                color: #00e5ff;
+                border: 1px solid #1c273a;
+                border-radius: 4px;
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+            QPushButton:hover {
+                background-color: #1e283d;
+                border-color: #00e5ff;
+            }
+            QPushButton:pressed {
+                background-color: #00e5ff;
+                color: #080b11;
+            }
+        """
+        btn_df_ep.setStyleSheet(button_style)
+        btn_df_ph.setStyleSheet(button_style)
+        btn_df_cc.setStyleSheet(button_style)
+        btn_df_ur.setStyleSheet(button_style)
+        
+        data_cf_layout.addLayout(data_cf_presets)
+        form_lay.addRow(self.data_custom_format_widget)
+        self.data_custom_format_widget.hide()
+        
+        self.opt_data_wl_type.currentTextChanged.connect(
+            lambda t: self.data_custom_format_widget.setVisible(t == "Custom")
+        )
         
         self.opt_data_urlencode = QCheckBox("URLEncode Data after Slicing")
         form_lay.addRow(self.opt_data_urlencode)
-        data_layout.addLayout(form_lay)
+        
+        wl_config_lay.addLayout(form_lay)
+        wl_config_group.setLayout(wl_config_lay)
+        data_layout.addWidget(wl_config_group)
         
         # Rules layout panel
         rules_box = QGroupBox("Rules List configuration")
@@ -608,6 +681,11 @@ class ConfigsTab(QWidget):
         self.options_tabs.addTab(selenium_opt_widget, "Selenium")
         
         self.sub_tabs.addTab(options_widget, "Other Options")
+        
+        # Real-time footer label update from Data options tab
+        def update_footer_wl(text):
+            self.lbl_allowed_wl.setText(f"Allowed Wordlists: {text}")
+        self.opt_data_wl_type.currentTextChanged.connect(update_footer_wl)
 
     def init_request_properties(self):
         self.prop_request = QWidget()
@@ -1324,7 +1402,8 @@ class ConfigsTab(QWidget):
             self.sync_blocks_to_ui()
             
             # Populate bottom meta info bar
-            self.lbl_allowed_wl.setText(f"Allowed Wordlists: {data.get('allowed_wordlists', 'Credentials')}")
+            allowed_wl = data.get('allowed_wordlists', data.get('data_settings', {}).get('allowed_wl_type', 'Credentials'))
+            self.lbl_allowed_wl.setText(f"Allowed Wordlists: {allowed_wl}")
             self.lbl_blocks_count.setText(f"Blocks Amount: {len(self.blocks)}")
             self.lbl_suggested_bots.setText(f"Suggested Bots: {data.get('suggested_bots', '5')}")
             self.lbl_info_author.setText(f"Author: {data.get('author', 'Unknown')}")
@@ -1354,6 +1433,7 @@ class ConfigsTab(QWidget):
             d_set = data.get("data_settings", {})
             self.opt_data_wl_type.setCurrentText(d_set.get("allowed_wl_type", "Default"))
             self.opt_data_urlencode.setChecked(d_set.get("urlencode", False))
+            self.opt_data_custom_format.setText(d_set.get("custom_format", ""))
             
             # Load HTTP execution engine settings
             self.opt_use_selenium.setChecked(data.get("use_selenium", True))
@@ -1565,6 +1645,7 @@ class ConfigsTab(QWidget):
             "data_settings": {
                 "allowed_wl_type": "Default",
                 "urlencode": False,
+                "custom_format": "",
                 "rules": []
             },
             "selenium_settings": {
@@ -1635,9 +1716,13 @@ class ConfigsTab(QWidget):
             for i in range(self.opt_data_rules_list.count()):
                 rules.append(self.opt_data_rules_list.item(i).text())
                 
+            data["allowed_wordlists"] = self.opt_data_wl_type.currentText()
+            self.lbl_allowed_wl.setText(f"Allowed Wordlists: {data['allowed_wordlists']}")
+            
             data["data_settings"] = {
                 "allowed_wl_type": self.opt_data_wl_type.currentText(),
                 "urlencode": self.opt_data_urlencode.isChecked(),
+                "custom_format": self.opt_data_custom_format.text().strip(),
                 "rules": rules
             }
             
@@ -1704,9 +1789,14 @@ class ConfigsTab(QWidget):
             rules = []
             for i in range(self.opt_data_rules_list.count()):
                 rules.append(self.opt_data_rules_list.item(i).text())
+            
+            data["allowed_wordlists"] = self.opt_data_wl_type.currentText()
+            self.lbl_allowed_wl.setText(f"Allowed Wordlists: {data['allowed_wordlists']}")
+            
             data["data_settings"] = {
                 "allowed_wl_type": self.opt_data_wl_type.currentText(),
                 "urlencode": self.opt_data_urlencode.isChecked(),
+                "custom_format": self.opt_data_custom_format.text().strip(),
                 "rules": rules
             }
             data["selenium_settings"] = {

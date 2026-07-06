@@ -355,9 +355,15 @@ class RunnerWidget(QFrame):
         self.btn_stop.setEnabled(True)
         
         wl_type = "Default"
+        wl_format = None
         wl_info = self.cb_wordlist.itemData(self.cb_wordlist.currentIndex())
         if isinstance(wl_info, dict):
             wl_type = wl_info.get("type", "Default")
+            wl_format = wl_info.get("format", None)
+            
+        if wl_type == "Custom" and not wl_format:
+            d_set = config_data.get("data_settings", {})
+            wl_format = d_set.get("custom_format", None)
 
         self.check_history = []
         self.log_history = []
@@ -368,7 +374,8 @@ class RunnerWidget(QFrame):
             lines_to_check, 
             proxies, 
             self.spin_bots.value(),
-            wordlist_type=wl_type
+            wordlist_type=wl_type,
+            wordlist_format=wl_format
         )
         
         self.engine.hit_signal.connect(self.on_engine_hit)

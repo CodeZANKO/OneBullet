@@ -1,1 +1,10 @@
-[]
+[
+    {
+        "name": "cctr",
+        "path": "C:/Users/saman/Desktop/cctr.txt",
+        "type": "Custom",
+        "purpose": "Testing",
+        "total": 60250672,
+        "format": "<CCNUM>:<MM>/<YY>:<CVV>"
+    }
+]
