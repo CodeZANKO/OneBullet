@@ -574,7 +574,7 @@ class ConfigsTab(QWidget):
         data_cf_presets.addWidget(btn_df_ph)
         
         btn_df_cc = QPushButton("CCNUM:MM/YY:CVV")
-        btn_df_cc.clicked.connect(lambda: self.opt_data_custom_format.setText("<CCNUM>:<MM>/<YY>:<CVV>"))
+        btn_df_cc.clicked.connect(lambda: self.opt_data_custom_format.setText("<CCNUM>|<MM>|<YY>|<CVV>"))
         data_cf_presets.addWidget(btn_df_cc)
         
         btn_df_ur = QPushButton("URLs")

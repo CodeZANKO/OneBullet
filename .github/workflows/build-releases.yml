@@ -1,0 +1,99 @@
+name: Build and Release Standalone Executables
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger when pushing a tag starting with v, e.g., v1.0.0
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    name: Build Windows Binary
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build Windows Executable
+        run: |
+          pyinstaller --onefile --noconsole --name="OneBullet-Windows" --add-data "assets;assets" main.py
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: OneBullet-Windows
+          path: dist/OneBullet-Windows.exe
+
+  build-linux:
+    name: Build Linux Binary
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build Linux Executable
+        run: |
+          pyinstaller --onefile --name="OneBullet-Linux" --add-data "assets:assets" main.py
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: OneBullet-Linux
+          path: dist/OneBullet-Linux
+
+  release:
+    name: Create GitHub Release
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Windows Executable
+        uses: actions/download-artifact@v4
+        with:
+          name: OneBullet-Windows
+          path: release-artifacts
+
+      - name: Download Linux Executable
+        uses: actions/download-artifact@v4
+        with:
+          name: OneBullet-Linux
+          path: release-artifacts
+
+      - name: Create Release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-artifacts/OneBullet-Windows.exe
+            release-artifacts/OneBullet-Linux
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

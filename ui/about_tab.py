@@ -21,9 +21,10 @@ class AboutTab(QWidget):
         card_layout = QVBoxLayout(title_card)
         card_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
+        from utils.helpers import get_resource_path
         from PyQt6.QtGui import QPixmap
         lbl_logo_img = QLabel()
-        logo_pixmap = QPixmap("D:/my project/selenium block/assets/logo.jpg")
+        logo_pixmap = QPixmap(get_resource_path("assets/logo.jpg"))
         if not logo_pixmap.isNull():
             lbl_logo_img.setPixmap(logo_pixmap.scaledToWidth(120, Qt.TransformationMode.SmoothTransformation))
             card_layout.addWidget(lbl_logo_img)

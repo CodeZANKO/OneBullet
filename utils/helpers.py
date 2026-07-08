@@ -635,3 +635,16 @@ def interpolate_value(val, variables: dict):
     return val
 
 
+def get_resource_path(relative_path: str) -> str:
+    """Gets the absolute path to a resource, supporting both dev environments and PyInstaller."""
+    import sys
+    try:
+        # PyInstaller creates a temporary folder and stores the path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        # Fall back to the root of the project (parent of utils folder)
+        base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    return os.path.join(base_path, relative_path)
+
+
+

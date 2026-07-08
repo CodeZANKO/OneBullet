@@ -19,7 +19,8 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("One Bullet v1.0.0")
         from PyQt6.QtGui import QIcon
-        self.setWindowIcon(QIcon("D:/my project/selenium block/assets/logo.jpg"))
+        from utils.helpers import get_resource_path
+        self.setWindowIcon(QIcon(get_resource_path("assets/logo.jpg")))
         
         # Load parameters dynamically from global settings
         from utils.helpers import load_settings, generate_stylesheet
